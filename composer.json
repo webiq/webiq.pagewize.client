@@ -1,0 +1,31 @@
+{
+  "name": "webiq/webiq.pagewize.client",
+  "type": "library",
+  "description": "Pagewize client; for theme development",
+  "keywords": [
+    "pagewize",
+    "client"
+  ],
+  "homepage": "https://www.pagewize.com",
+  "minimum-stability": "dev",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Hugo Zonderland",
+      "email": "hugo@webiq.nl"
+    },
+    {
+      "name": "Jorik Schouten",
+      "email": "jorik@webiq.nl"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PagewizeClient\\": "lib/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^6.1",
+    "smarty/smarty": "^3.1"
+  }
+}
