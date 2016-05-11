@@ -21,11 +21,6 @@ $slug = $_SERVER['REQUEST_URI'];
 // get the content that belongs to this url
 $variables = $client->fetchContent($slug);
 
-echo '<pre>';
-print_r($variables);
-echo '</pre>';
-die();
-
 // set the values
 foreach ($variables as $variableName => $variableValue) {
     $smarty->assign($variableName, $variableValue);
