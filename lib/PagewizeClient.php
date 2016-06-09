@@ -114,6 +114,10 @@ class PagewizeClient
      */
     private function _doRequest($slug, $language = null)
     {
+        if ($this->debug) {
+            echo '<pre>';
+        }
+
         if (!is_string($slug)) {
             throw new \InvalidArgumentException($slug . ' is not a valid slug value');
         }
@@ -161,7 +165,8 @@ class PagewizeClient
             // raw result
             if ($this->debug) {
                 echo 'Status code: ' . $response->getStatusCode() . "\n";
-                echo 'Raw result: ' . (string) $response->getBody() . "\n";
+                echo 'Raw result: ' . "\n";
+                print_r(json_decode((string) $response->getBody(), JSON_PRETTY_PRINT));
             }
 
             // return as json object
@@ -170,6 +175,10 @@ class PagewizeClient
             echo 'Setup is incorrect.  Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n";
         } catch (ServerException $serverException) {
             echo 'Something is wrong with the frontend-server. You can retry you\'re request but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n";
+        }
+
+        if ($this->debug) {
+            echo '<pre>';
         }
 
         return null;
