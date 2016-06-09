@@ -165,7 +165,7 @@ class PagewizeClient
             }
 
             // return as json object
-            return json_decode((string) $response->getBody());
+            return json_decode((string) $response->getBody(), true);
         } catch (ClientException $clientException) {
             echo 'Setup is incorrect.  Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n";
         } catch (ServerException $serverException) {
