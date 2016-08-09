@@ -150,17 +150,19 @@ class PagewizeClient
 
         try {
             $client = new Client();
-            $response = $client->post($this->getApiUrl(), [
-                'timeout' => '20',
-                'headers' => [
-                    'User-Agent' => $this->connectorName . ' ' . $this->connectorVersion,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'X-Apikey' => $this->apiKey
-                ],
-                'body' => $requestBody,
-                'debug' => $this->debug
-            ]);
+            $response = $client->post(
+                $this->getApiUrl() . '/slugs', [
+                    'timeout' => '20',
+                    'headers' => [
+                        'User-Agent' => $this->connectorName . ' ' . $this->connectorVersion,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                        'X-Apikey' => $this->apiKey
+                    ],
+                    'body' => $requestBody,
+                    'debug' => $this->debug
+                ]
+            );
 
             // raw result
             if ($this->debug) {
