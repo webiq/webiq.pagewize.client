@@ -7,7 +7,6 @@ This library can be used for those who develop Pagewize theme's.
 The setup is quite simple:
 
 1. Download composer: `curl -sS https://getcomposer.org/installer | php`
-1. `php composer.phar require  webiq/webiq.pagewize.client`
 1. type `php composer.phar install`, all dependencies are setup
 1. Create a `config.php` file in the root fo the directory, please checkout `config.sample.php` as sample
 

@@ -15,8 +15,8 @@ $api = [
 // smarty configuration
 $smartyConfig = [
     'template_dir' => __DIR__ . '/tpl',
-    'compile_dir' => __DIR__ . '/compile',
-    'cache_dir' => __DIR__ . '/cache',
+    'compile_dir' => __DIR__ . '/tmp/compile',
+    'cache_dir' => __DIR__ . '/tmp/cache',
     'cache' => false
 ];
 
