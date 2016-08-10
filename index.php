@@ -2,7 +2,7 @@
 /**
  * Index file, routes all traffic
  *
- * @license https://github.com/webiq/webiq.pagewize.client/blob/master/LICENSE.md
+ * @license LICENSE.md
  */
 use PagewizeClient\PagewizeClient;
 
@@ -21,20 +21,35 @@ $slug = $_SERVER['REQUEST_URI'];
 // get the content that belongs to this url
 $variables = $client->fetchContent($slug);
 
-// set the values
-foreach ($variables as $variableName => $variableValue) {
-    $smarty->assign($variableName, $variableValue);
+// get requests are passed on and ONLY used for Smarty
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // set the values
+    foreach ($variables as $variableName => $variableValue) {
+        $smarty->assign($variableName, $variableValue);
+    }
+
+    /**
+     * Show the right template based on the requested content
+     */
+    switch ($variables['type']) {
+        case 'post':
+            $smarty->display('post.tpl');
+            break;
+
+        case 'page':
+            $smarty->display('page.tpl');
+            break;
+    }
 }
 
-/**
- * Show the right template based on the requested content
- */
-switch ($variables['type']) {
-    case 'post':
-        $smarty->display('post.tpl');
-        break;
+// When submitting a new comment
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // init the parent comment id variable, otherwise extract from the $_POST payload
+    $parentCommentId = null;
+    if (isset($_POST['parentCommentId'])) {
+        $parentCommentId = $_POST['parentCommentId'];
+    }
 
-    case 'page':
-        $smarty->display('page.tpl');
-        break;
+    // create a comment object!
+    echo $client->addComment($_POST['name'], $_POST['email'], $_POST['comment'], $variables[''], $parentCommentId);
 }

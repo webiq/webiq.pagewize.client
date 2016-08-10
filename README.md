@@ -17,3 +17,6 @@ of the project. If you use nginx read the online documentation.
 The `PagewizeClient` will always return the data for a homepage. This is the page that belongs to the `/` url. From any other request the `$_SERVER['REQUEST_URI']` (slug) is passed to the client and will return the content that matches that slug.
 
 Template files are stored in the `/tpl` folder. 
+
+##### Submit comments
+To submit comments we recommend to point the form for submitting comments to the same url as the post. Use these variables as inut names: `$_POST['name']`, `$_POST['email']`, `$_POST['comment']`, `$_POST['parentCommentId']`. The post id is extracted from the `$variables` array that is filled when executing the request. 

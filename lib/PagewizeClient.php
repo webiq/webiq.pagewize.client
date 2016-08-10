@@ -1,13 +1,16 @@
 <?php
 namespace PagewizeClient;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-
 /**
  * Class Connector
  *
- * Enables communication with a Pagewize API. Can fetch complete pages or posts. Just anything that has a slug.
+ * Enables communication with the Pagewize API. This class enables the (theme) developer to;
+ *
+ * 1. Fetch a page, post or post category by their slug
+ * 2. Add a Comment by using the Pagewize Comment Api
  *
  * @license LICENSE.md
  *
