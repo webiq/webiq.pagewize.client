@@ -38,7 +38,7 @@ class PagewizeClient
     /**
      * @var string $connectorVersion - Version of the connector
      */
-    protected $connectorVersion = '1.0';
+    protected $connectorVersion = 'alpha';
 
     /**
      * Connector constructor.
@@ -76,7 +76,52 @@ class PagewizeClient
             throw new \InvalidArgumentException($language . ' is not a valid ISO xxx value.');
         }
 
-        return $this->_doRequest($slug, $language);
+        if (!is_string($slug)) {
+            throw new \InvalidArgumentException($slug . ' is not a valid slug value');
+        }
+
+        // define the request body
+        $requestBody = ['slug' => $slug];
+
+        if (!is_null($language)) {
+            $requestBody = array_merge($requestBody, ['language' => $language]);
+        }
+
+        return $this->_doRequest($this->getApiUrl() . '/slugs', $requestBody);
+    }
+
+    /**
+     * Places a new Comment under the given $postId. When the Comment is a reply to define the $parentCommentId variable
+     * with the id of the Comment you are replying too
+     *
+     * @param string   $name
+     * @param string   $email
+     * @param string   $comment
+     * @param null|int $postId
+     * @param null|int $parentCommentId
+     * @return array
+     */
+    public function addComment($name, $email, $comment, $postId = null, $parentCommentId = null)
+    {
+        if (empty($name) || empty($email) || empty($comment)) {
+            throw new \InvalidArgumentException('One of the required variables is not set');
+        }
+
+        $requestBody = [
+            'name' => $name,
+            'email' => $email,
+            'comment' => $comment
+        ];
+
+        if (!is_null($postId)) {
+            $requestBody = array_merge($requestBody, ['postId' => $postId]);
+        }
+
+        if (!is_null($parentCommentId)) {
+            $requestBody = array_merge($requestBody, ['parentComment' => $postId]);
+        }
+
+        return $this->_doRequest($this->getApiUrl() . ' /comments', $requestBody);
     }
 
     /**
@@ -108,30 +153,23 @@ class PagewizeClient
     /**
      * Will do the actual request
      *
-     * @param string $slug     - What is the requested slug
-     * @param string $language - In what language the content is requested in ISO xxx format
+     * @param string $apiEndPoint - What endpoint for the request body
+     * @param array  $requestBody - Data to POST to the Pagewize Api
      * @return array
      */
-    private function _doRequest($slug, $language = null)
+    private function _doRequest($apiEndPoint, array $requestBody)
     {
+        if (empty($apiEndPoint)) {
+            throw new \InvalidArgumentException('$apiEndPoint has to be set');
+        }
+
         if ($this->debug) {
             echo '<pre>';
         }
 
-        if (!is_string($slug)) {
-            throw new \InvalidArgumentException($slug . ' is not a valid slug value');
-        }
-
         // echo endpoint
         if ($this->debug) {
-            echo 'Url: ' . $this->getApiUrl() . "\n";
-        }
-
-        // define the request body
-        $requestBody = ['slug' => $slug];
-
-        if (!is_null($language)) {
-            $requestBody = array_merge($requestBody, ['language' => $language]);
+            echo 'Url: ' . $apiEndPoint . "\n";
         }
 
         // json encode the body
@@ -139,9 +177,7 @@ class PagewizeClient
 
         // echo payload
         if ($this->debug) {
-            echo '<pre>';
             print_r($requestBody);
-            echo '</pre>';
             echo "\n";
         }
 
@@ -151,7 +187,7 @@ class PagewizeClient
         try {
             $client = new Client();
             $response = $client->post(
-                $this->getApiUrl() . '/slugs', [
+                $apiEndPoint, [
                     'timeout' => '20',
                     'headers' => [
                         'User-Agent' => $this->connectorName . ' ' . $this->connectorVersion,
@@ -174,13 +210,13 @@ class PagewizeClient
             // return as json object
             return json_decode((string) $response->getBody(), true);
         } catch (ClientException $clientException) {
-            echo 'Setup is incorrect.  Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n";
+            echo 'Setup is incorrect. Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n";
         } catch (ServerException $serverException) {
-            echo 'Something is wrong with the frontend-server. You can retry you\'re request but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n";
+            echo 'Something is wrong with the frontend-server. You can resend the request, but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n";
         }
 
         if ($this->debug) {
-            echo '<pre>';
+            echo '</pre>';
         }
 
         return null;
