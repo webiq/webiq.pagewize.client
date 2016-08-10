@@ -90,7 +90,7 @@ class PagewizeClient
             $requestBody = array_merge($requestBody, ['language' => $language]);
         }
 
-        return $this->_doRequest($this->getApiUrl() . '/slugs', $requestBody);
+        return $this->_doRequest('/slugs', $requestBody);
     }
 
     /**
@@ -124,7 +124,7 @@ class PagewizeClient
             $requestBody = array_merge($requestBody, ['parentComment' => $postId]);
         }
 
-        return $this->_doRequest($this->getApiUrl() . ' /comments', $requestBody);
+        return $this->_doRequest('/comments', $requestBody);
     }
 
     /**
@@ -188,7 +188,7 @@ class PagewizeClient
         $response = null;
 
         try {
-            $client = new Client();
+            $client = new Client(['base_uri' => $this->getApiUrl()]);
             $response = $client->post(
                 $apiEndPoint, [
                     'timeout' => '20',
