@@ -158,7 +158,7 @@ class PagewizeClient
      *
      * @param string $apiEndPoint - What endpoint for the request body
      * @param array  $requestBody - Data to POST to the Pagewize Api
-     * @return array
+     * @return array|bool
      */
     private function _doRequest($apiEndPoint, array $requestBody)
     {
@@ -213,15 +213,16 @@ class PagewizeClient
             // return as json object
             return json_decode((string) $response->getBody(), true);
         } catch (ClientException $clientException) {
-            echo 'Setup is incorrect. Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n";
+            error_log('Setup is incorrect. Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n");
         } catch (ServerException $serverException) {
-            echo 'Something is wrong with the frontend-server. You can resend the request, but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n";
+            error_log('Something is wrong with the frontend-server. You can resend the request, but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n");
+            echo $serverException->getResponse()->getBody();
         }
 
         if ($this->debug) {
             echo '</pre>';
         }
 
-        return null;
+        return false;
     }
 }
