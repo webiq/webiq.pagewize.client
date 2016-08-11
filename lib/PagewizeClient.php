@@ -158,7 +158,7 @@ class PagewizeClient
      *
      * @param string $apiEndPoint - What endpoint for the request body
      * @param array  $requestBody - Data to POST to the Pagewize Api
-     * @return array|bool
+     * @return array|string|null
      */
     private function _doRequest($apiEndPoint, array $requestBody)
     {
@@ -184,8 +184,9 @@ class PagewizeClient
             echo "\n";
         }
 
-        // init response variable
+        // init response & returnMessage variable
         $response = null;
+        $returnMessage = null;
 
         try {
             $client = new Client(['base_uri' => $this->getApiUrl()]);
@@ -211,18 +212,20 @@ class PagewizeClient
             }
 
             // return as json object
-            return json_decode((string) $response->getBody(), true);
+            $returnMessage = json_decode((string) $response->getBody(), true);
         } catch (ClientException $clientException) {
-            error_log('Setup is incorrect. Please debug using the following message:' . "\n" . $clientException->getMessage() . "\n");
+            $returnMessage = 'Could not send out the request; ' . $clientException->getMessage();
         } catch (ServerException $serverException) {
-            error_log('Something is wrong with the frontend-server. You can resend the request, but if it is consistent please submit a bug report.' . "\n" . $serverException->getMessage() . "\n");
-            echo $serverException->getResponse()->getBody();
+            $returnMessage = json_decode((string) $serverException->getResponse()->getBody(), true);
         }
+
+        // add the http status code to the payload
+        $returnMessage['code'] = $response->getStatusCode();
 
         if ($this->debug) {
             echo '</pre>';
         }
 
-        return false;
+        return $returnMessage;
     }
 }
