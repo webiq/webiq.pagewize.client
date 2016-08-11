@@ -19,10 +19,19 @@ require_once __DIR__ . '/bootstrap.php';
 $slug = $_SERVER['REQUEST_URI'];
 
 // get the content that belongs to this url
-$variables = $client->fetchContent($slug);
+$response = $client->fetchContent($slug);
+
+// result is true when the response code is 200, otherwise false
+$result = $response['result'];
+
+// http status code that came with the response
+$statusCode = $response['code'];
+
+// variables are to be found in the messages object
+$variables = $response['message'];
 
 // get requests are passed on and ONLY used for Smarty
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $result) {
     // set the values
     foreach ($variables as $variableName => $variableValue) {
         $smarty->assign($variableName, $variableValue);
@@ -39,7 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         case 'page':
             $smarty->display('page.tpl');
             break;
+
+
+        case 'post_category':
+            $smarty->display('post_category.tpl');
+            break;
     }
+}
+
+// if result is false it can be a content-not-found error
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $statusCode >= 400 && $statusCode < 500) {
+    // set the values
+    foreach ($variables as $variableName => $variableValue) {
+        $smarty->assign($variableName, $variableValue);
+    }
+
+    $smarty->display('404.tpl');
 }
 
 // When submitting a new comment
