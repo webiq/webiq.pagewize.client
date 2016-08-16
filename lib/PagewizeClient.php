@@ -128,6 +128,42 @@ class PagewizeClient
     }
 
     /**
+     * Submits a Form to the API. Please submit all form elements to this function in a multidimensional array; for
+     * instance. The $formData cannot contain data that isn't part of the form.
+     *
+     * @param int   $formId      - Id of the Form object                           ($block.form.id)
+     * @param int   $formBlockId - The id of the form block within the Page / Post ($block.id)
+     * @param array $formData    - Data actually submitted
+     *
+     * @return array|string|null
+     */
+    public function submitForm($formId, $formBlockId, array $formData)
+    {
+        // must have an id
+        if (empty($formId)) {
+            throw new \InvalidArgumentException('Form id cannot be empty');
+        }
+
+        if (empty($formBlockId)) {
+            throw new \InvalidArgumentException('Form block id cannot be empty');
+        }
+
+        // must have data!
+        if (empty($formData)) {
+            throw new \InvalidArgumentException('No form data to submit');
+        }
+
+        // compose the form data array
+        $requestData = array_merge($formData, [
+            'formId' => $formId,
+            'formBlockId' => $formBlockId
+        ]);
+
+        // execute and return the request
+        return $this->_doRequest('/forms', $requestData);
+    }
+
+    /**
      * Enables debug mode
      */
     public function enableDebugMode()
@@ -180,6 +216,7 @@ class PagewizeClient
 
         // echo payload
         if ($this->debug) {
+            echo 'Request body: ' . "\n";
             print_r($requestBody);
             echo "\n";
         }
@@ -196,6 +233,7 @@ class PagewizeClient
                     'headers' => [
                         'User-Agent' => $this->connectorName . ' ' . $this->connectorVersion,
                         'Content-Type' => 'application/json',
+
                         'Accept' => 'application/json',
                         'X-Apikey' => $this->apiKey
                     ],
@@ -213,14 +251,14 @@ class PagewizeClient
 
             // return as json object
             $returnMessage = json_decode((string) $response->getBody(), true);
+            $returnMessage['code'] = $response->getStatusCode();
         } catch (ClientException $clientException) {
-            $returnMessage = 'Could not send out the request; ' . $clientException->getMessage();
+            $returnMessage = json_decode((string) $clientException->getResponse()->getBody(), true);
+            return $returnMessage;
         } catch (ServerException $serverException) {
             $returnMessage = json_decode((string) $serverException->getResponse()->getBody(), true);
+            return $returnMessage;
         }
-
-        // add the http status code to the payload
-        $returnMessage['code'] = $response->getStatusCode();
 
         if ($this->debug) {
             echo '</pre>';

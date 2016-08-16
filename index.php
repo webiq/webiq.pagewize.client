@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $result) {
             $smarty->display('page.tpl');
             break;
 
-
         case 'post_category':
             $smarty->display('post_category.tpl');
             break;
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $statusCode >= 400 && $statusCode < 5
 }
 
 // When submitting a new comment
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $variables['type'] == 'post') {
     // init the parent comment id variable, otherwise extract from the $_POST payload
     $parentCommentId = null;
     if (isset($_POST['parentCommentId'])) {
