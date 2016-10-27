@@ -26,6 +26,8 @@
   },
   "require": {
     "guzzlehttp/guzzle": "^6.1",
-    "smarty/smarty": "^3.1"
+    "smarty/smarty": "^3.1",
+    "intervention/image": "^2.3",
+    "intervention/imagecache": "^2.3"
   }
 }
