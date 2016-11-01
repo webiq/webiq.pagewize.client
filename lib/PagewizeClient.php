@@ -121,7 +121,7 @@ class PagewizeClient
         }
 
         if (!is_null($parentCommentId)) {
-            $requestBody = array_merge($requestBody, ['parentComment' => $postId]);
+            $requestBody = array_merge($requestBody, ['parentComment' => $parentCommentId]);
         }
 
         return $this->_doRequest('/comments', $requestBody);
