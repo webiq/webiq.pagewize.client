@@ -74,5 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $variables['type'] == 'post') {
     }
 
     // create a comment object!
-    echo $client->addComment($_POST['name'], $_POST['email'], $_POST['comment'], $variables[''], $parentCommentId);
+    $response = $client->addComment($_POST['name'], $_POST['email'], $_POST['comment'], $variables['id'], $parentCommentId);
+
+    if (is_array($response)) {
+        $response = json_encode($response);
+    }
+
+    echo $response;
 }
