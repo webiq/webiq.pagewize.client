@@ -18,14 +18,15 @@ class PagewizeImageManager
     /**
      * Resizes the image and places the result into cache
      *
-     * @param string $source   - Source (full url)
-     * @param null   $width    - Preferred width of the iamge
-     * @param null   $height   - Preferred height of the image
-     * @param null   $fileType - Request other file type (i.e. ico)
+     * @param string      $source   - Source (full url)
+     * @param null|int    $width    - Preferred width of the iamge
+     * @param null|int    $height   - Preferred height of the image
+     * @param null|string $fileType - Request other file type (i.e. ico)
+     * @param null|int    $blur     - Apply blur to the image
      *
      * @return Image
      */
-    public static function processImageRequest($source, $width = null, $height = null, $fileType = null)
+    public static function processImageRequest($source, $width = null, $height = null, $fileType = null, $blur = null)
     {
         if (empty($source)) {
             die('No source file defined..');
@@ -36,11 +37,16 @@ class PagewizeImageManager
             die($source . ' is unknown image');
         }
 
+        // make sure the blur value is correct
+        if (!is_null($blur) && ($blur % 10 == 0 || $blur > 100)) {
+            die('blur has to be in steps of 10 and not more then 100');
+        }
+
         // create instance of the image manager
         $manager = new ImageManager();
 
         //get/set the image from/in the cache manager
-        $image = $manager->cache(function ($img) use ($source, $width, $height, $fileType) {
+        $image = $manager->cache(function ($img) use ($source, $width, $height, $fileType, $blur) {
             /**
              * @var ImageCache $img
              * @var Image      $image
@@ -56,6 +62,10 @@ class PagewizeImageManager
             if (is_null($width) && is_null($height)) {
                 $width = $image->getWidth();
                 $height = $image->getHeight();
+            }
+
+            if (!is_null($blur)) {
+                $image->blur($blur);
             }
 
             // resize according to specification

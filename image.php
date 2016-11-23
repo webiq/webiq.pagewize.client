@@ -11,6 +11,7 @@ include __DIR__ . '/vendor/autoload.php';
 $width = null;
 $height = null;
 $fileType = null;
+$blur = null;
 $sourceImage = $_GET['src'];
 
 if (isset($_GET['w'])) {
@@ -25,4 +26,8 @@ if (isset($_GET['f'])) {
     $fileType = $_GET['f'];
 }
 
-echo PagewizeImageManager::processImageRequest($sourceImage, $width, $height, $fileType);
+if (isset($_GET['b'])) {
+    $blur = $_GET['b'];
+}
+
+echo PagewizeImageManager::processImageRequest($sourceImage, $width, $height, $fileType, $blur);
