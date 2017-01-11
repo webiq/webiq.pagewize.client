@@ -1,4 +1,4 @@
-Copyright (c) 2011-2016 WebIQ, https://github.com/webiq <info@webiq.nl>
+Copyright (c) 2011-2017 WebIQ, https://github.com/webiq <info@webiq.nl>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
