@@ -16,10 +16,10 @@ use PagewizeClient\PagewizeClient;
 require_once __DIR__ . '/bootstrap.php';
 
 // get the request from the url
-$slug = $_SERVER['REQUEST_URI'];
+$urlComponents = parse_url($_SERVER['REQUEST_URI']);
 
 // get the content that belongs to this url
-$response = $client->fetchContent($slug);
+$response = $client->fetchContent($urlComponents['path']);
 
 // result is true when the response code is 200, otherwise false
 $result = $response['result'];
@@ -29,6 +29,9 @@ $statusCode = $response['code'];
 
 // variables are to be found in the messages object
 $variables = $response['message'];
+
+// replace the staticUrl variable
+$variables['themeUrl'] = '';
 
 // get requests are passed on and ONLY used for Smarty
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && $result) {
