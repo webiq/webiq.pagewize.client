@@ -20,7 +20,14 @@ $smartyConfig = [
     'cache' => false
 ];
 
+$interventionImageConfig = [
+    'driver' => 'imagick',
+    'cache' => [
+        'path' => __DIR__ . '/tmp/cache'
+    ]
+];
+
 // environment settings
 $environment = [
-    'error_reporting' => E_ALL & ~E_NOTICE,
+    'error_reporting' => E_ALL & ~E_NOTICE
 ];

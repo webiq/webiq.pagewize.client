@@ -1,11 +1,14 @@
 <?php
 /**
- * Pagewize image mananger
+ * Pagewize image manager
  */
 use PagewizeClient\PagewizeImageManager;
 
 // include composer autoloader
 include __DIR__ . '/vendor/autoload.php';
+
+/** @var array $interventionImageConfig */
+require_once __DIR__ . '/config.php';
 
 // init variables
 $width = null;
@@ -30,4 +33,11 @@ if (isset($_GET['b'])) {
     $blur = $_GET['b'];
 }
 
-echo PagewizeImageManager::processImageRequest($sourceImage, $width, $height, $fileType, $blur);
+echo PagewizeImageManager::processImageRequest(
+    $interventionImageConfig,
+    $sourceImage,
+    $width,
+    $height,
+    $fileType,
+    $blur
+);
