@@ -36,12 +36,12 @@ class PagewizeClient
     /**
      * @var string $connectorName - The name of this connector
      */
-    protected $connectorName = 'Pagewize Connect';
+    protected $connectorName = 'Pagewize Connect Client';
 
     /**
      * @var string $connectorVersion - Version of the connector
      */
-    protected $connectorVersion = 'alpha';
+    protected $connectorVersion = 'closed beta 1.03';
 
     /**
      * Connector constructor.
