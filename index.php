@@ -18,6 +18,19 @@ require_once __DIR__ . '/bootstrap.php';
 // get the request from the url
 $urlComponents = parse_url($_SERVER['REQUEST_URI']);
 
+// when submitting to something with /form/ in the url we are going to assume its a form post
+// Return is in json
+if (stripos($urlComponents['path'], '/form/') !== false && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = $client->submitForm(last(explode('/', $urlComponents['path'])), $_POST['formBlockId'], $_POST);
+
+    if (is_array($response)) {
+        $response = json_encode($response);
+    }
+
+    echo $response;
+    die;
+}
+
 // get the content that belongs to this url
 $response = $client->fetchContent($urlComponents['path']);
 
